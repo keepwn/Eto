@@ -57,28 +57,28 @@ namespace Eto.Mac.Forms.Controls
 
 			public bool AcceptsReturn { get; set; }
 
-			public override void KeyDown(NSEvent theEvent)
-			{
-				var ev = theEvent.ToEtoKeyEventArgs();
-				if (!AcceptsTab)
-				{
-					if (ev.KeyData == Keys.Tab)
-					{
-						Window.SelectNextKeyView(this);
-						return;
-					}
-					if (ev.KeyData == (Keys.Tab | Keys.Shift))
-					{
-						Window.SelectPreviousKeyView(this);
-						return;
-					}
-				}
-				if (!AcceptsReturn && ev.KeyData == Keys.Enter)
-				{
-					return;
-				}
-				base.KeyDown(theEvent);
-			}
+			//public override void KeyDown(NSEvent theEvent)
+			//{
+			//	var ev = theEvent.ToEtoKeyEventArgs();
+			//	if (!AcceptsTab)
+			//	{
+			//		if (ev.KeyData == Keys.Tab)
+			//		{
+			//			Window.SelectNextKeyView(this);
+			//			return;
+			//		}
+			//		if (ev.KeyData == (Keys.Tab | Keys.Shift))
+			//		{
+			//			Window.SelectPreviousKeyView(this);
+			//			return;
+			//		}
+			//	}
+			//	if (!AcceptsReturn && ev.KeyData == Keys.Enter)
+			//	{
+			//		return;
+			//	}
+			//	base.KeyDown(theEvent);
+			//}
 		}
 
 		public NSScrollView Scroll { get; private set; }
