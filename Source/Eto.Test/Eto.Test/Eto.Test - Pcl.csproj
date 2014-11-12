@@ -65,7 +65,6 @@
     <Compile Include="Sections\Drawing\AntialiasSection.cs" />
     <Compile Include="Sections\Drawing\ClipSection.cs" />
     <Compile Include="Sections\Drawing\DrawTextSection.cs" />
-    <Compile Include="Sections\Drawing\FontsSection.cs" />
     <Compile Include="Sections\Drawing\GraphicsPathSection.cs" />
     <Compile Include="Sections\Drawing\PenSection.cs" />
     <Compile Include="Sections\Drawing\PixelOffsetSection.cs" />
@@ -130,6 +129,7 @@
     <Compile Include="Sections\Drawing\DrawLoopSection.cs" />
     <Compile Include="UnitTests\Drawing\ClipTests.cs" />
     <Compile Include="UnitTests\Drawing\MatrixTests.cs" />
+    <Compile Include="UnitTests\Forms\Controls\ComboBoxTests.cs" />
     <Compile Include="UnitTests\Forms\GridViewUtils.cs" />
     <Compile Include="UnitTests\Forms\RangeTests.cs" />
     <Compile Include="UnitTests\Handlers\Controls\TestControlHandler.cs" />
@@ -169,6 +169,7 @@
     <Compile Include="UnitTests\Drawing\BitmapTests.cs" />
     <Compile Include="Sections\Controls\ControlColorsSection.cs" />
     <Compile Include="Sections\Controls\LinkButtonSection.cs" />
+    <Compile Include="Sections\Controls\DropDownSection.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="TestIcon.ico" />

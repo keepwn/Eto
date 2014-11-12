@@ -54,5 +54,41 @@ namespace Eto.Android.Forms.Controls
 				throw new NotImplementedException();
 			}
 		}
+
+		public string Text
+		{
+			get
+			{
+				throw new NotImplementedException();
+			}
+			set
+			{
+				throw new NotImplementedException();
+			}
+		}
+
+		public bool ReadOnly
+		{
+			get
+			{
+				throw new NotImplementedException();
+			}
+			set
+			{
+				throw new NotImplementedException();
+			}
+		}
+
+		public bool AutoComplete
+		{
+			get
+			{
+				throw new NotImplementedException();
+			}
+			set
+			{
+				throw new NotImplementedException();
+			}
+		}
 	}
 }

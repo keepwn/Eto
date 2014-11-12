@@ -9,6 +9,8 @@ using Eto.GtkSharp.Forms.Printing;
 using Eto.GtkSharp.Forms;
 using Eto.GtkSharp.IO;
 using Eto.Forms.ThemedControls;
+using Eto.GtkSharp.Forms.Menu;
+using Eto.GtkSharp.Forms.ToolBar;
 
 namespace Eto.GtkSharp
 {
@@ -29,6 +31,21 @@ namespace Eto.GtkSharp
 		public override bool IsDesktop { get { return true; } }
 
 		public override bool IsGtk { get { return true; } }
+
+		public override bool IsValid
+		{
+			get
+			{
+				try
+				{
+					return typeof(Gtk.Application) != null;
+				}
+				catch
+				{
+					return false;
+				}
+			}
+		}
 
 		#if GTK2
 		public override string ID { get { return "gtk2"; } }

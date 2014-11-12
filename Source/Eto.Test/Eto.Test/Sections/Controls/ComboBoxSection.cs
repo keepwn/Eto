@@ -4,7 +4,7 @@ using Eto.Forms;
 
 namespace Eto.Test.Sections.Controls
 {
-	[Section("Controls", typeof(DropDown))]
+	[Section("Controls", typeof(ComboBox))]
 	public class ComboBoxSection : Scrollable
 	{
 		public ComboBoxSection()
@@ -15,15 +15,7 @@ namespace Eto.Test.Sections.Controls
 			
 			layout.AddRow(new Label { Text = "With Items" }, TableLayout.AutoSized(Items()));
 
-			layout.AddRow(new Label { Text = "Disabled" }, TableLayout.AutoSized(Disabled()));
-			
 			layout.AddRow(new Label { Text = "Set Initial Value" }, TableLayout.AutoSized(SetInitialValue()));
-			
-			layout.AddRow(new Label { Text = "EnumDropDown<Key>" }, TableLayout.AutoSized(EnumCombo()));
-
-			layout.AddRow(new Label { Text = "ComboBox" }, TableLayout.AutoSized(ComboBox()));
-
-			layout.AddRow(new Label { Text = "Editable ComboBox" }, TableLayout.AutoSized(EditableComboBox()));
 
 			layout.Add(null, null, true);
 
@@ -32,15 +24,14 @@ namespace Eto.Test.Sections.Controls
 
 		Control Default()
 		{
-			var control = new DropDown();
+			var control = new ComboBox();
 			LogEvents(control);
 			
 			var layout = new DynamicLayout();
 			layout.Add(TableLayout.AutoSized(control));
-			layout.BeginVertical();
-			layout.AddRow(null, AddRowsButton(control), RemoveRowsButton(control), ClearButton(control), SetSelected(control), ClearSelected(control), null);
-			layout.EndVertical();
-			
+			layout.AddSeparateRow(null, AddRowsButton(control), RemoveRowsButton(control), ClearButton(control), SetSelected(control), ClearSelected(control), null);
+			layout.AddSeparateRow(null, GetEnabled(control), GetReadOnly(control), AutoComplete(control), ShowComboText(control), SetComboText(control), null);
+
 			return layout;
 		}
 
@@ -100,7 +91,7 @@ namespace Eto.Test.Sections.Controls
 
 		DropDown Items()
 		{
-			var control = new DropDown();
+			var control = new ComboBox();
 			LogEvents(control);
 			for (int i = 0; i < 20; i++)
 			{
@@ -123,47 +114,24 @@ namespace Eto.Test.Sections.Controls
 			return control;
 		}
 
-		Control EnumCombo()
+		Control GetEnabled(ComboBox list)
 		{
-			var control = new EnumDropDown<Keys>();
-			LogEvents(control);
-			control.SelectedKey = ((int)Keys.E).ToString();
+			var control = new CheckBox { Text = "Enabled" };
+			control.CheckedBinding.Bind(list, l => l.Enabled);
+			return control;
+		}
+		
+		Control GetReadOnly(ComboBox list)
+		{
+			var control = new CheckBox { Text = "ReadOnly" };
+			control.CheckedBinding.Bind(list, l => l.ReadOnly);
 			return control;
 		}
 
-		Control ComboBox()
+		Control AutoComplete(ComboBox list)
 		{
-			var control = new ComboBox();
-			control.IsEditable = false;
-			LogEvents(control);
-			for (int i = 0; i < 20; i++)
-			{
-				control.Items.Add(new ListItem { Text = "Item " + i });
-			}
-			return control;
-		}
-
-		Control EditableComboBox()
-		{
-			var control = new ComboBox();
-			LogEvents(control);
-
-			var layout = new DynamicLayout();
-			layout.Add(TableLayout.AutoSized(control));
-			layout.BeginVertical();
-			layout.AddRow(null, AddRowsButton(control), RemoveRowsButton(control), ClearButton(control), SetSelected(control), ClearSelected(control), null);
-			layout.AddRow(null, Editable(control), ShowComboText(control), SetComboText(control), SetComboFont(control), null);
-			layout.EndVertical();
-
-			return layout;
-		}
-		Control Editable(ComboBox list)
-		{
-			var control = new Button { Text = "Editable/Disable" };
-			control.Click += delegate
-			{
-				list.IsEditable = !list.IsEditable;
-			};
+			var control = new CheckBox { Text = "AutoComplete" };
+			control.CheckedBinding.Bind(list, l => l.AutoComplete);
 			return control;
 		}
 
@@ -187,22 +155,11 @@ namespace Eto.Test.Sections.Controls
 			return control;
 		}
 
-		Control SetComboFont(ComboBox list)
+		void LogEvents(ComboBox control)
 		{
-			var control = new Button { Text = "Set ComboFont" };
-			control.Click += delegate
-			{
-				list.Font = Fonts.Serif(10, FontStyle.Bold);
-			};
-			return control;
-		}
+			control.SelectedIndexChanged += (sender, e) => Log.Write(control, "SelectedIndexChanged, Value: {0}", control.SelectedIndex);
 
-		void LogEvents(DropDown control)
-		{
-			control.SelectedIndexChanged += delegate
-			{
-				Log.Write(control, "SelectedIndexChanged, Value: {0}", control.SelectedIndex);
-			};
+			control.TextChanged += (sender, e) => Log.Write(control, "TextChanged, Value: {0}", control.Text);
 		}
 	}
 }

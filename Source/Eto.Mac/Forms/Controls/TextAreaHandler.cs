@@ -52,33 +52,30 @@ namespace Eto.Mac.Forms.Controls
 				get { return WeakHandler.Target; }
 				set { WeakHandler = new WeakReference(value); } 
 			}
+		}
 
-			public bool AcceptsTab { get; set; }
-
-			public bool AcceptsReturn { get; set; }
-
-			//public override void KeyDown(NSEvent theEvent)
-			//{
-			//	var ev = theEvent.ToEtoKeyEventArgs();
-			//	if (!AcceptsTab)
-			//	{
-			//		if (ev.KeyData == Keys.Tab)
-			//		{
-			//			Window.SelectNextKeyView(this);
-			//			return;
-			//		}
-			//		if (ev.KeyData == (Keys.Tab | Keys.Shift))
-			//		{
-			//			Window.SelectPreviousKeyView(this);
-			//			return;
-			//		}
-			//	}
-			//	if (!AcceptsReturn && ev.KeyData == Keys.Enter)
-			//	{
-			//		return;
-			//	}
-			//	base.KeyDown(theEvent);
-			//}
+		public override void OnKeyDown(KeyEventArgs e)
+		{
+			if (!AcceptsTab)
+			{
+				if (e.KeyData == Keys.Tab)
+				{
+					if (Control.Window != null)
+						Control.Window.SelectNextKeyView(Control);
+					return;
+				}
+				if (e.KeyData == (Keys.Tab | Keys.Shift))
+				{
+					if (Control.Window != null)
+						Control.Window.SelectPreviousKeyView(Control);
+					return;
+				}
+			}
+			if (!AcceptsReturn && e.KeyData == Keys.Enter)
+			{
+				return;
+			}
+			base.OnKeyDown(e);
 		}
 
 		public NSScrollView Scroll { get; private set; }
@@ -126,8 +123,6 @@ namespace Eto.Mac.Forms.Controls
 				HorizontallyResizable = true,
 				VerticallyResizable = true,
 				Editable = true,
-				AcceptsTab = true,
-				AcceptsReturn = true,
 				RichText = false,
 				AllowsDocumentBackgroundColorChange = false,
 				Selectable = true,
@@ -151,7 +146,9 @@ namespace Eto.Mac.Forms.Controls
 
 		protected override SizeF GetNaturalSize(SizeF availableSize)
 		{
+			#pragma warning disable 612,618
 			return TextArea.DefaultSize;
+			#pragma warning restore 612,618
 		}
 
 		public override void AttachEvent(string id)
@@ -288,6 +285,7 @@ namespace Eto.Mac.Forms.Controls
 				if (value)
 				{
 					Control.TextContainer.WidthTracksTextView = true;
+					Control.TextContainer.ContainerSize = new CGSize(Scroll.DocumentVisibleRect.Size.Width, float.MaxValue);
 				}
 				else
 				{
@@ -335,33 +333,29 @@ namespace Eto.Mac.Forms.Controls
 			set { Control.SelectedRange = new NSRange(value, 0); }
 		}
 
+		static readonly object AcceptsTabKey = new object();
+
 		public bool AcceptsTab
 		{
-			get
-			{ 
-				var ctl = Control as EtoTextView;
-				return ctl == null || ctl.AcceptsTab;
-			}
+			get { return Widget.Properties.Get<bool?>(AcceptsTabKey) ?? true; }
 			set
-			{ 
-				var ctl = Control as EtoTextView;
-				if (ctl != null)
-					ctl.AcceptsTab = value;
+			{
+				Widget.Properties[AcceptsTabKey] = value;
+				if (!value)
+					HandleEvent(Eto.Forms.Control.KeyDownEvent);
 			}
 		}
 
+		static readonly object AcceptsReturnKey = new object();
+
 		public bool AcceptsReturn
 		{
-			get
-			{ 
-				var ctl = Control as EtoTextView;
-				return ctl == null || ctl.AcceptsReturn;
-			}
+			get { return Widget.Properties.Get<bool?>(AcceptsReturnKey) ?? true; }
 			set
-			{ 
-				var ctl = Control as EtoTextView;
-				if (ctl != null)
-					ctl.AcceptsReturn = value;
+			{
+				Widget.Properties[AcceptsReturnKey] = value;
+				if (!value)
+					HandleEvent(Eto.Forms.Control.KeyDownEvent);
 			}
 		}
 
@@ -373,6 +367,12 @@ namespace Eto.Mac.Forms.Controls
 			Control.SelectedRange = range;
 			if (scrollToCursor)
 				Control.ScrollRangeToVisible(range);
+		}
+
+		public HorizontalAlign HorizontalAlign
+		{
+			get { return Control.Alignment.ToEto(); }
+			set { Control.Alignment = value.ToNS(); }
 		}
 	}
 }

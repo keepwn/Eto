@@ -6,7 +6,7 @@ using Eto.Forms;
 using System.Runtime.InteropServices;
 using Eto.Drawing;
 
-namespace Eto.WinForms
+namespace Eto.WinForms.Forms.Controls
 {
 	public class TextAreaHandler : WindowsControl<TextAreaHandler.EtoRichTextBox, TextArea, TextArea.ICallback>, TextArea.IHandler
 	{
@@ -29,6 +29,17 @@ namespace Eto.WinForms
 					return false;
 
 				return base.IsInputKey(keyData);
+			}
+
+			protected override void OnKeyDown(swf.KeyEventArgs e)
+			{
+				if (!AcceptsReturn && e.KeyData == swf.Keys.Return)
+				{
+					e.Handled = true;
+					return;
+				}
+
+				base.OnKeyDown(e);
 			}
 		}
 
@@ -169,6 +180,19 @@ namespace Eto.WinForms
 		public override bool ShouldBubbleEvent(swf.Message msg)
 		{
 			return !intrinsicEvents.Contains((Win32.WM)msg.Msg) && base.ShouldBubbleEvent(msg);
+		}
+
+		public HorizontalAlign HorizontalAlign
+		{
+			get { return Control.SelectionAlignment.ToEto(); }
+			set
+			{
+				if (value == HorizontalAlign) return;
+				var sel = Selection;
+				Control.SelectAll();
+				Control.SelectionAlignment = value.ToSWF();
+				Selection = sel;
+			}
 		}
 	}
 }

@@ -4,7 +4,7 @@ using swf = System.Windows.Forms;
 using Eto.Forms;
 using Eto.Drawing;
 
-namespace Eto.WinForms
+namespace Eto.WinForms.Forms
 {
 	public abstract class WindowsPanel<TControl, TWidget, TCallback> : WindowsContainer<TControl, TWidget, TCallback>, Panel.IHandler
 		where TControl : swf.Control
@@ -16,7 +16,9 @@ namespace Eto.WinForms
 		protected override void Initialize()
 		{
 			base.Initialize();
+			#pragma warning disable 612,618
 			Padding = Panel.DefaultPadding;
+			#pragma warning restore 612,618
 		}
 
 		public virtual swf.Control ContainerContentControl

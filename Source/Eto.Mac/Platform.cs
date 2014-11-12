@@ -11,7 +11,8 @@ using Eto.Mac.Forms.Menu;
 using Eto.Mac.Threading;
 using Eto.Threading;
 using System.Reflection;
-
+using Eto.Mac.Forms.Cells;
+using Eto.Mac.Forms.ToolBar;
 
 #if XAMMAC2
 using AppKit;
@@ -185,6 +186,12 @@ namespace Eto.Mac
 			{
 				return Assembly.GetEntryAssembly().Location.StartsWith(NSBundle.MainBundle.BundlePath, StringComparison.Ordinal);
 			}
+		}
+
+		static void LinkingOverrides()
+		{
+			// Prevent linking system code used via reflection in Eto.dll due to pcl restrictions
+			Assembly.GetCallingAssembly();
 		}
 	}
 }
